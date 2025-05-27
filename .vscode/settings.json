@@ -66,6 +66,7 @@
     "BUBBLE.C": "cpp",
     "INSERTION.C": "cpp",
     "SELECTION.C": "cpp",
-    "MERGE.C": "cpp"
+    "MERGE.C": "cpp",
+    "QUICK.C": "cpp"
   }
 }
