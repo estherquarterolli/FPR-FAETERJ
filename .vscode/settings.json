@@ -64,6 +64,7 @@
     "Q2.C": "cpp",
     "Q3.C": "cpp",
     "BUBBLE.C": "cpp",
-    "INSERTION.C": "cpp"
+    "INSERTION.C": "cpp",
+    "SELECTION.C": "cpp"
   }
 }
