@@ -67,6 +67,9 @@
     "INSERTION.C": "cpp",
     "SELECTION.C": "cpp",
     "MERGE.C": "cpp",
-    "QUICK.C": "cpp"
-  }
+    "QUICK.C": "cpp",
+    "PROJETOAV2.C": "cpp"
+  },
+  "liveServer.settings.port": 5501,
+  "liveServer.settings.multiRootWorkspaceName": "FPR-FAETERJ"
 }
