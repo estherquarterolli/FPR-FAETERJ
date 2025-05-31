@@ -1,10 +1,14 @@
 /*
-Faça um Programa que mostre a mensagem "Alo mundo" na tela.
+Testar no terminal compartilhado <jefferson>
+             ./AV2
 */
+
 #include <stdio.h>
 
 int main()
 {
-    printf("Alo mundo");
-    return 0;
+    printf("teste de comit");
+    return 0; 
+
+
 }
