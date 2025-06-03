@@ -45,7 +45,7 @@ Existe limite de curso????
 
 #include <stdio.h>
 #include <string.h>
-
+#include <stdlib.h>
 
 #define MAX_CURSOS 10
 
@@ -53,7 +53,7 @@ Existe limite de curso????
 typedef struct
 {
 
-    int codigo[5];
+    int codigo;
 
     float nota_enade;
     float idd;
@@ -102,19 +102,26 @@ int gerarRel(char nomeArquivo[], Tcursos curso[], int *totCursos);
 
 //Função auxiliar para class CPC continuo e IGC
 int cpcCONT(int cpc_FAIXA);
-int igc ();
+int igc (char nomeArquivo[], Tcursos curso[], int *totCursos);
 
+void printarCurso(Tcursos curso); //testar o struch
 
 // MAIN ----------------------------------
 int main(){
 
     // declaração de variáveis
-    int resultado, menu, i, j;
+    int resultado, totcursos=0,count=0;
     Tcursos curso[10];
 
     // lendo o arquivo
-    resultado = lerArq("EnadeCursos.txt", Tcursos curso[], int *totcursos);
+    resultado = lerArq("EnadeCursos.txt", curso, &totcursos);
+   //testando se o vetor foi preenchido corretamente
+    while (count<totcursos ) {
+    // Imprime o primeiro curso lido
+    printarCurso(curso[count]);
+    count++;
 
+}
     // exibindo o resultado
     switch (resultado)
     {
@@ -125,20 +132,16 @@ int main(){
     case 0:
         printf("\n\nArquivo vazio!\n");
         break;
-
-    default:
-        printf("\n\nHa %d caracteres no arquivo %s\n", resultado, nomeArquivo);
-    }
-    return 0;
-
+    };
+    
+/*
     // menu de navegação após leitura
 
     printf("<<< <Olá, seja bem vindo(a) ao Enade:>>>>> \n Selecione uma escolha:\n 1-Adicionar curso \n 2-Gerar relatorio \n0- Sair do programa \n\n");
     scanf("%d", &menu);
     // while(getchar()!='\n');  Limpa buffer do teclado
 
-    switch (menu)
-    {
+    switch (menu){
     case 0: // sair do codigo
         printf("Até a próxima!!");
         break;
@@ -165,50 +168,104 @@ int main(){
         printf("Opção Invalida! Por favor, digite uma opção valida:");
         break;
     }
+        */
+
+    return 0;
 }
+
 /// Implementação das funções:
+void printarCurso(Tcursos curso) {
+    printf("Código do curso: %d\n", curso.codigo);
+    printf("Nota ENADE: %.2f\n", curso.nota_enade);
+    printf("IDD: %.2f\n", curso.idd);
+    printf("Percentual de doutores: %.2f\n", curso.doutores);
+    printf("Percentual de mestres: %.2f\n", curso.mestres);
+    printf("Regime de trabalho: %.2f\n", curso.regime_trabalho);
+    printf("Organização didático-pedagógica: %.2f\n", curso.organizacao_didatica);
+    printf("Infraestrutura: %.2f\n", curso.infraestrutura);
+    printf("Oportunidades acadêmicas/profissionais: %.2f\n", curso.oportunidades);
+    printf("Número de alunos: %d\n", curso.num_alunos);
+    printf("CPC contínuo: %.2f\n", curso.cpc_continuo);
+    printf("CPC faixa: %d\n", curso.cpc_faixa);
+    printf("---------------------------------------\n");
+}
+
+
 
 // ler cursos no arquivo
-int lerArq(char nomeArquivo[], Tcursos curso[], int *totCursos){
+int lerArq(char nomeArquivo[], Tcursos curso[], int *totCursos){ //----------------------------------
 
 
 FILE *arq = fopen(nomeArquivo, "r"); //leitura do arquivo do enade
   *totCursos = 0;
-    if (!arq){ //erro de abertura
-    
-        printf("Deu erro na abertura");
-        Return 0; //Retorna 0 cursos lidos
+    if (!arq){ //erro de abertura    
+        return -1; 
         
     }
   
-//lendo os dados do arquivo e promovendo
-char linha[256] // array de tamanho fixo
-
-	while (fgets (linha, 256, arq) != EOF && *totCursos < MAX_CURSOS) {
-       // linha[strcspn(linha, "\n")] = 0;  Serve para remover o '\n' no final da string
+ //lendo os dados do arquivo e promovendo
+ char linha[256];   // vetor que le os arquivos
+ int i=0;
+	while (fgets (linha, 256, arq) != NULL && *totCursos < MAX_CURSOS){
+        
+     int campo = 0, k=0, j=0; // campo prenche cada espaço corretamento no struch 
     
-        conferir se todos os dados forma lidos corretamente
-/* 
-if (str=="/n"){    //toda vez que mudar a linha , anda do vetor de struch (curso)
-     i++;
-     totCursos++;
-}
-     */
+     char temp[30]; // para armazenar cada linha do arquivo separadamente
+        
+    
+        for ( /*k=0 */  ; linha[k] != '\0' && linha[k] != '\n'; k++) {
+            if (linha[k] != '|') {
+                temp[j++] = linha[k];
+            } else {
+                temp[j] = '\0'; // fecha string
+                
+                j = 0; //zera o j para contagem do proximo curso.
 
+                switch (campo) {
+                    case 0: curso[i].codigo = atoi(temp); break;
+                    case 1: curso[i].nota_enade = atof(temp); break;
+                    case 2: curso[i].idd = atof(temp); break;
+                    case 3: curso[i].doutores = atof(temp); break;
+                    case 4: curso[i].mestres = atof(temp); break;
+                    case 5: curso[i].regime_trabalho = atof(temp); break;
+                    case 6: curso[i].organizacao_didatica = atof(temp); break;
+                    case 7: curso[i].infraestrutura = atof(temp); break;
+                    case 8: curso[i].oportunidades = atof(temp); break;
+                }
+
+                campo++;
+            }
         }
-    
-    
+
+        // Último campo (num_alunos), após o último '|'
+        temp[j] = '\0';
+        curso[i].num_alunos = atoi(temp);
+
+        i++; // próximo curso
+        *totCursos=i;
     }
 
+        
+fclose(arq);
+return 1;
+
+} // --------------------------------------------------------------------------------------
 
 
-    int addCurso(char nomeArquivo[], Tcursos curso[], int *totCursos){
+
+
+
+/*
+int addCurso(char nomeArquivo[], Tcursos curso[], int *totCursos){
 
         FILE *arq = fopen(nomeArquivo, "a"); //leitura do arquivo do enade
 
  if (!arq){ //erro de abertura
     
         printf("Deu erro na abertura");
+        fclose(arq);
         Return 0; //Retorna 0 cursos lidos
     }
     }
+    
+    */
